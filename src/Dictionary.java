@@ -326,12 +326,14 @@ public class Dictionary extends JPanel implements ActionListener {
         JRadioButton hashMapButton = new JRadioButton("HashMap Trie");
         JRadioButton treeMapButton = new JRadioButton("TreeMap Trie");
         JRadioButton arrayButton = new JRadioButton("Array Trie");
+        JRadioButton linkedListButton = new JRadioButton("LinkedList Trie");
 
         ButtonGroup trieGroup = new ButtonGroup();
         trieGroup.add(arrayListButton);
         trieGroup.add(hashMapButton);
         trieGroup.add(treeMapButton);
         trieGroup.add(arrayButton);
+        trieGroup.add(linkedListButton);
         arrayButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -362,12 +364,20 @@ public class Dictionary extends JPanel implements ActionListener {
                 addToTrie(trie);
             }
         });
+        linkedListButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                Dictionary.trie = new TrieUseArrayList();
+                addToTrie(trie);
+            }
+        });
 
         JPanel triePanel = new JPanel(new FlowLayout());
         triePanel.add(arrayListButton);
         triePanel.add(hashMapButton);
         triePanel.add(treeMapButton);
         triePanel.add(arrayButton);
+        triePanel.add(linkedListButton);
 
         frame.add(triePanel, BorderLayout.NORTH);
         frame.add(new Dictionary());
