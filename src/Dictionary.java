@@ -319,7 +319,7 @@ public class Dictionary extends JPanel implements ActionListener {
     public static void main(String[] args) {
         JFrame frame = new JFrame("TextDemo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(600, 400));
+        frame.setPreferredSize(new Dimension(800, 550));
 
 
         JRadioButton arrayListButton = new JRadioButton("ArrayList Trie");
