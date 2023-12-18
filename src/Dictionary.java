@@ -11,7 +11,7 @@ import java.awt.Color;
 import javax.swing.JColorChooser;
 
 
-public class TextDemo extends JPanel implements ActionListener {
+public class Dictionary extends JPanel implements ActionListener {
     protected JTextField textField;
     protected JTextArea textArea;
     private JComboBox<Integer> fontSizeComboBox;
@@ -30,6 +30,7 @@ public class TextDemo extends JPanel implements ActionListener {
             public void removeUpdate(DocumentEvent e) {
                 addTextToArea();
             }
+
             private void addTextToArea() {
 //                System.out.println(textField.getText());
                 List<Pair<String, String>> lt = trie.suggest(textField.getText());
@@ -37,20 +38,23 @@ public class TextDemo extends JPanel implements ActionListener {
                 for (Pair<String, String> i : lt) {
                     String res = "";
                     int id = 0;
-                    for(int j = i.getFirst().length() - 1; j >= 0; --j){
-                        if(i.getFirst().charAt(j) == ' ') continue;
-                        id = j; break;
+                    for (int j = i.getFirst().length() - 1; j >= 0; --j) {
+                        if (i.getFirst().charAt(j) == ' ') continue;
+                        id = j;
+                        break;
                     }
-                    for(int j = 0; j <= id; ++j){
+                    for (int j = 0; j <= id; ++j) {
                         res += i.getFirst().charAt(j);
                     }
                     textArea.append(res + ": " + i.getSecond() + "\n");
                 }
             }
+
             @Override
             public void insertUpdate(DocumentEvent e) {
                 addTextToArea();
             }
+
             @Override
             public void changedUpdate(DocumentEvent e) {
                 addTextToArea();
@@ -58,7 +62,7 @@ public class TextDemo extends JPanel implements ActionListener {
         });
     }
 
-    public TextDemo() {
+    public Dictionary() {
         super(new GridBagLayout());
 
         JPanel inputPanel = new JPanel(new BorderLayout());
@@ -226,6 +230,7 @@ public class TextDemo extends JPanel implements ActionListener {
         }
 
     }
+
     private void deleteWord() {
         String wordToDelete = JOptionPane.showInputDialog(this, "Nhập từ cần xóa:");
         if (wordToDelete != null && !wordToDelete.isEmpty()) {
@@ -243,9 +248,9 @@ public class TextDemo extends JPanel implements ActionListener {
                 int linesToSkip = 0;
                 while ((line = bufferedReader.readLine()) != null) {
                     if (line.equals(wordToDelete)) {
-                        linesToSkip = 2; 
+                        linesToSkip = 2;
                     } else if (linesToSkip > 0) {
-                        linesToSkip--; 
+                        linesToSkip--;
                     } else {
                         bufferedWriter.write(line);
                         bufferedWriter.newLine();
@@ -292,17 +297,6 @@ public class TextDemo extends JPanel implements ActionListener {
         textArea.setCaretPosition(textArea.getDocument().getLength());
     }
 
-
-    private static void createAndShowGUI() {
-        JFrame frame = new JFrame("TextDemo");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(600, 400));
-        frame.add(new TextDemo());
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }
-
     public static void addToTrie(Trie trie) {
         try {
             File myObj = new File(FILE_PATH);
@@ -323,12 +317,63 @@ public class TextDemo extends JPanel implements ActionListener {
     }
 
     public static void main(String[] args) {
-        TextDemo.trie = new TrieUseMap();
-        addToTrie(trie);
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
+        JFrame frame = new JFrame("TextDemo");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setPreferredSize(new Dimension(600, 400));
+
+
+        JRadioButton arrayListButton = new JRadioButton("ArrayList Trie");
+        JRadioButton hashMapButton = new JRadioButton("HashMap Trie");
+        JRadioButton treeMapButton = new JRadioButton("TreeMap Trie");
+        JRadioButton arrayButton = new JRadioButton("Array Trie");
+
+        ButtonGroup trieGroup = new ButtonGroup();
+        trieGroup.add(arrayListButton);
+        trieGroup.add(hashMapButton);
+        trieGroup.add(treeMapButton);
+        trieGroup.add(arrayButton);
+        arrayButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                Dictionary.trie = new TrieUseArray();
+                addToTrie(trie);
             }
         });
+        arrayListButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Dictionary.trie = new TrieUseArrayList();
+                addToTrie(trie);
+            }
+        });
+
+        hashMapButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               Dictionary.trie =  new TrieUseHashMap();
+                addToTrie(trie);
+            }
+        });
+
+        treeMapButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Dictionary.trie = new TrieUseMap();
+                addToTrie(trie);
+            }
+        });
+
+        JPanel triePanel = new JPanel(new FlowLayout());
+        triePanel.add(arrayListButton);
+        triePanel.add(hashMapButton);
+        triePanel.add(treeMapButton);
+        triePanel.add(arrayButton);
+
+        frame.add(triePanel, BorderLayout.NORTH);
+        frame.add(new Dictionary());
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
+
 }
