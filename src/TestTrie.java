@@ -7,7 +7,7 @@ public class TestTrie {
         trie.insert("application", "ung dung");
         trie.insert("banana", "Quả chuối");
         trie.insert("pine apple", "Quả dứa");
-        System.out.println(trie.translate("Banana"));
+        System.out.println(trie.contains("Banana"));
 //        trie.print();
 //        System.out.println(trie.suggest("ap"));
     }

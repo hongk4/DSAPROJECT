@@ -20,7 +20,6 @@ public class TrieUseArrayList implements Trie{
     }
 
     private Node root = null;
-    private HashSet<String> tmp = new HashSet<>();
 
     public TrieUseArrayList() {
         this.root = new Node();
@@ -32,10 +31,9 @@ public class TrieUseArrayList implements Trie{
 
     public void insert(String en, String vi) {
         en = en.toLowerCase();
-        while (tmp.contains(en)) {
+        while (this.contains(en)) {
             en = en + ' ';
         }
-        tmp.add(en);
         Node p = root;
         for (int i = 0; i < en.length(); ++i) {
             int x = charToInt(en.charAt(i));
@@ -53,6 +51,7 @@ public class TrieUseArrayList implements Trie{
         Node p = root;
         for (int i = 0; i < en.length(); ++i) {
             int x = charToInt(en.charAt(i));
+            if(x < 0 || x >= 27) continue;
             if (p.child.get(x) == null)
                 p.child.set(x, new Node());
             p = p.child.get(x);
@@ -65,6 +64,7 @@ public class TrieUseArrayList implements Trie{
         Node p = root;
         for (int i = 0; i < en.length(); ++i) {
             int x = charToInt(en.charAt(i));
+            if(x < 0 || x >= 27) continue;
             if (p.child.get(x) == null)
                 p.child.set(x, new Node());
             p = p.child.get(x);
@@ -75,7 +75,14 @@ public class TrieUseArrayList implements Trie{
     }
 
     public boolean deleteWord(String en) {
-        return deleteWord(root, en, 0);
+
+        boolean chk = false;
+        Node p = root;
+        while(this.contains(en)){
+            chk |= deleteWord(root, en, 0);
+            en = en + ' ';
+        }
+        return chk;
     }
 
     private boolean deleteWord(Node current, String en, int depth) {

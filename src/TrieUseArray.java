@@ -48,6 +48,7 @@ public class TrieUseArray implements Trie {
         Node p = root;
         for (int i = 0; i < en.length(); ++i) {
             int x = charToInt(en.charAt(i));
+            if(x < 0 || x >= 27) continue;
             if (p.child[x] == null)
                 p.child[x] = new Node();
             p = p.child[x];
@@ -61,6 +62,7 @@ public class TrieUseArray implements Trie {
         Node p = root;
         for (int i = 0; i < en.length(); ++i) {
             int x = charToInt(en.charAt(i));
+            if(x < 0 || x >= 27) continue;
             if (p.child[x] == null)
                 p.child[x] = new Node();
             p = p.child[x];
@@ -122,6 +124,42 @@ public class TrieUseArray implements Trie {
         }
     }
     public boolean deleteWord(String en) {
+        boolean chk = false;
+        while(this.contains(en)){
+            chk |= deleteWord(root, en, 0);
+            en = en + ' ';
+        }
+        return chk;
+    }
+    private boolean deleteWord(Node current, String en, int depth) {
+        if (current == null) {
+            return false;
+        }
+
+        if (depth == en.length()) {
+            if (!current.isEndWord) {
+                return false;
+            }
+            current.isEndWord = false;
+            return isNodeEmpty(current);
+        }
+
+        int index = charToInt(en.charAt(depth));
+        boolean shouldDeleteChild = deleteWord(current.child[index], en, depth + 1);
+
+        if (shouldDeleteChild) {
+            current.child[index] = null;
+            return isNodeEmpty(current);
+        }
+
+        return false;
+    }
+    private boolean isNodeEmpty(Node node) {
+        for (Node childNode : node.child) {
+            if (childNode != null) {
+                return false;
+            }
+        }
         return true;
     }
 

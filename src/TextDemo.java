@@ -323,7 +323,7 @@ public class TextDemo extends JPanel implements ActionListener {
     }
 
     public static void main(String[] args) {
-        TextDemo.trie = new TrieUseArrayList();
+        TextDemo.trie = new TrieUseMap();
         addToTrie(trie);
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

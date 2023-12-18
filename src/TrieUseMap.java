@@ -91,6 +91,37 @@ public class TrieUseMap implements Trie{
         });
     }
     public boolean deleteWord(String en) {
-        return true;
+        boolean chk = false;
+        Node p = root;
+        while(this.contains(en)){
+            chk |= deleteWord(p, en, 0);
+            en = en + ' ';
+        }
+        return chk;
+    }
+    private boolean deleteWord(Node current, String en, int depth) {
+        if (current == null) {
+            return false;
+        }
+
+        if (depth == en.length()) {
+            if (!current.isEndWord) {
+                return false;
+            }
+            current.isEndWord = false;
+            return isNodeEmpty(current);
+        }
+
+        boolean shouldDeleteChild = deleteWord(current.child.get(en.charAt(depth)), en, depth + 1);
+
+        if (shouldDeleteChild) {
+            current.child.remove(en.charAt(depth));
+            return isNodeEmpty(current);
+        }
+
+        return false;
+    }
+    private boolean isNodeEmpty(Node node) {
+        return node.child.isEmpty();
     }
 }
