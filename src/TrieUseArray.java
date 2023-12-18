@@ -23,15 +23,13 @@ public class TrieUseArray implements Trie {
     public Node getRoot() {
         return root;
     }
-    HashSet<String> tmp = new HashSet<>();
 
     //    insert word en with meaning vi into trie
     public void insert(String en, String vi) {
         en = en.toLowerCase();
-        while(tmp.contains(en)){
+        while(this.contains(en)){
             en = en + ' ';
         }
-        tmp.add(en);
         Node p = root;
         for (int i = 0; i < en.length(); ++i) {
             int x = charToInt(en.charAt(i));
@@ -45,7 +43,7 @@ public class TrieUseArray implements Trie {
     }
 
     //    check string en in dictionary or not
-    public boolean checkSpell(String en) {
+    public boolean contains(String en) {
         Node p = root;
         for (int i = 0; i < en.length(); ++i) {
             int x = charToInt(en.charAt(i));

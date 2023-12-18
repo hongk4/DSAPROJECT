@@ -22,14 +22,12 @@ public class TrieUseMap implements Trie{
         return root;
     }
 
-    HashSet<String> tmp = new HashSet<>();
 
     public void insert(String en, String vi) {
         en = en.toLowerCase();
-        while(tmp.contains(en)){
+        while(this.contains(en)){
             en = en + ' ';
         }
-        tmp.add(en);
         Node p = root;
         for (int i = 0; i < en.length(); ++i) {
             if (!p.child.containsKey(en.charAt(i)))
@@ -40,7 +38,7 @@ public class TrieUseMap implements Trie{
         p.meaning = vi;
     }
 
-    public boolean checkSpell(String en) {
+    public boolean contains(String en) {
         en = en.toLowerCase();
         Node p = root;
         for (int i = 0; i < en.length(); ++i) {
