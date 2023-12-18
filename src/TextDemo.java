@@ -1,9 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.Scanner;
 import javax.swing.*;
@@ -23,7 +20,9 @@ public class TextDemo extends JPanel implements ActionListener {
     private static Trie trie;
     private Color selectedTextColor = Color.RED;
     private static final String FILE_PATH = "in.txt";
+    private static final String TEMP_FILE_PATH = "newfile.txt";
     private JButton addWordButton;
+    private JButton deleteWordButton;
 
     public void runRealTime(JTextField textField) {
         textField.getDocument().addDocumentListener(new DocumentListener() {
@@ -110,7 +109,18 @@ public class TextDemo extends JPanel implements ActionListener {
             }
         });
 
-        inputPanel.add(addWordButton, BorderLayout.NORTH);
+        deleteWordButton = new JButton("Xóa từ");
+        deleteWordButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteWord();
+            }
+        });
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
+        buttonPanel.add(addWordButton);
+        buttonPanel.add(deleteWordButton);
+
+        inputPanel.add(buttonPanel, BorderLayout.NORTH);
 
         inputPanel.add(clearButton, BorderLayout.EAST);
         inputPanel.add(saveButton, BorderLayout.WEST);
@@ -132,7 +142,6 @@ public class TextDemo extends JPanel implements ActionListener {
                 textArea.setFont(new Font(currentTextAreaFont.getFontName(), currentTextAreaFont.getStyle(), fontSize));
             }
         });
-
 
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -217,6 +226,50 @@ public class TextDemo extends JPanel implements ActionListener {
         }
 
     }
+    private void deleteWord() {
+        String wordToDelete = JOptionPane.showInputDialog(this, "Nhập từ cần xóa:");
+        if (wordToDelete != null && !wordToDelete.isEmpty()) {
+            if (!trie.contains(wordToDelete)) {
+                JOptionPane.showMessageDialog(this, "Từ không tồn tại trong từ điển.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                FileReader reader = new FileReader(FILE_PATH);
+                FileWriter writer = new FileWriter(TEMP_FILE_PATH, false);
+                BufferedReader bufferedReader = new BufferedReader(reader);
+                BufferedWriter bufferedWriter = new BufferedWriter(writer);
+
+                String line;
+                int linesToSkip = 0;
+                while ((line = bufferedReader.readLine()) != null) {
+                    if (line.equals(wordToDelete)) {
+                        linesToSkip = 2; 
+                    } else if (linesToSkip > 0) {
+                        linesToSkip--; 
+                    } else {
+                        bufferedWriter.write(line);
+                        bufferedWriter.newLine();
+                    }
+                }
+
+                bufferedReader.close();
+                bufferedWriter.close();
+
+                File originalFile = new File(FILE_PATH);
+                if (originalFile.delete()) {
+                    File tempFile = new File(TEMP_FILE_PATH);
+                    tempFile.renameTo(originalFile);
+                }
+
+                boolean success = trie.deleteWord(wordToDelete);
+
+                JOptionPane.showMessageDialog(this, "Từ đã được xóa khỏi từ điển của bạn");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Lỗi khi xóa từ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
 
     private void updateTheme() {
         if (darkModeCheckBox.isSelected()) {
@@ -239,7 +292,7 @@ public class TextDemo extends JPanel implements ActionListener {
         textArea.setCaretPosition(textArea.getDocument().getLength());
     }
 
-   
+
     private static void createAndShowGUI() {
         JFrame frame = new JFrame("TextDemo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -270,7 +323,7 @@ public class TextDemo extends JPanel implements ActionListener {
     }
 
     public static void main(String[] args) {
-        TextDemo.trie = new TrieUseMap();
+        TextDemo.trie = new TrieUseArrayList();
         addToTrie(trie);
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

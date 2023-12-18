@@ -90,4 +90,7 @@ public class TrieUseMap implements Trie{
             getCandidates(value, str + key, list);
         });
     }
+    public boolean deleteWord(String en) {
+        return true;
+    }
 }

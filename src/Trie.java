@@ -5,4 +5,5 @@ public interface Trie {
     boolean contains(String en);
     String translate(String en);
     List<Pair<String,String >> suggest(String prefix);
+    boolean deleteWord(String en);
 }

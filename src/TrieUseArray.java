@@ -44,6 +44,7 @@ public class TrieUseArray implements Trie {
 
     //    check string en in dictionary or not
     public boolean contains(String en) {
+        en = en.toLowerCase();
         Node p = root;
         for (int i = 0; i < en.length(); ++i) {
             int x = charToInt(en.charAt(i));
@@ -119,6 +120,9 @@ public class TrieUseArray implements Trie {
                 getCandidates(p.child[i], str + ch, list);
             }
         }
+    }
+    public boolean deleteWord(String en) {
+        return true;
     }
 
     private int charToInt(char c) {
