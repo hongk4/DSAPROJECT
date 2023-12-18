@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Trie {
     class Node {
@@ -24,10 +23,15 @@ public class Trie {
     public Node getRoot() {
         return root;
     }
-
+    HashSet<String> tmp = new HashSet<>();
 
     //    insert word en with meaning vi into trie
     public void insert(String en, String vi) {
+        en = en.toLowerCase();
+        while(tmp.contains(en)){
+            en = en + ' ';
+        }
+        tmp.add(en);
         Node p = root;
         for (int i = 0; i < en.length(); ++i) {
             int x = charToInt(en.charAt(i));
@@ -54,6 +58,7 @@ public class Trie {
 
     //    return meaning of word en, if not found return "not found"
     public String translate(String en) {
+        en = en.toLowerCase();
         Node p = root;
         for (int i = 0; i < en.length(); ++i) {
             int x = charToInt(en.charAt(i));
@@ -85,6 +90,7 @@ public class Trie {
 
     //    suggest 20 word has common prefix with string prefix
     public List<Pair<String,String >> suggest(String prefix) {
+        prefix = prefix.toLowerCase();
         List<Pair<String,String>> list = new ArrayList<>();
         Node p = endNode(prefix);
         getCandidates(p, prefix, list);
@@ -92,6 +98,7 @@ public class Trie {
     }
 
     public Node endNode(String prefix) {
+        prefix = prefix.toLowerCase();
         Node p = root;
         for (int i = 0; i < prefix.length(); ++i) {
             int x = charToInt(prefix.charAt(i));
