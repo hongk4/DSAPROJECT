@@ -111,11 +111,10 @@ public class TrieUseArray implements Trie {
     }
 
     private void getCandidates(Node p, String str, List<Pair<String,String>> list) {
-        if(p.isEndWord) {
-            list.add(new Pair<>(str, p.meaning));
-        }
         if(list.size() > 20)
             return;
+        if(p.isEndWord) 
+            list.add(new Pair<>(str, p.meaning));
         for (int i = 0; i < 27; ++i) {
             if (p.child[i] != null) {
                 char ch = intToChar(i);
